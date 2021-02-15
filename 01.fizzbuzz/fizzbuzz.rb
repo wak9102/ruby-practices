@@ -11,6 +11,6 @@ while int <= 100 do
   else
     puts int
   end
-int += 1
+  int += 1
 end
 
