@@ -13,4 +13,3 @@ while int <= 100 do
   end
   int += 1
 end
-
