@@ -8,18 +8,15 @@ scores = ARGV[0].split(',')
 # ストライクは10に置換する
 # 9フレーム目（17投目）までのストライクの次には0を追加する
 shots = []
-shot_count = 0
 
 scores.each do |score|
   if score == 'X'
     shots << 10
-    if shot_count <= 17
+    if shots.count <= 17
       shots << 0
-      shot_count += 2
     end
   else
     shots << score.to_i
-    shot_count += 1
   end
 end
 
