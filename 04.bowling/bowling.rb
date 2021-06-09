@@ -17,8 +17,7 @@ scores.each do |score|
 end
 
 # スコア配列を2投ずつフレームごとの配列に格納する
-frames = []
-shots.each_slice(2) { |shot| frames << shot }
+frames = shots.each_slice(2)
 
 # フレームごとにスコアを集計する
 #   10フレーム以前は
