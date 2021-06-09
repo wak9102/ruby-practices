@@ -33,16 +33,16 @@ spare_or_strike_the_time_before_last = nil # 前々フレームがスペアか�
 
 frames.each.with_index(1) do |shot, index|
   if index <= 10
-    case spare_or_strike_last_time
-    when :spare then points += (shot[0] * 2 + shot[1])
-    when :strike
-      points += if spare_or_strike_the_time_before_last == :strike
+    points += case spare_or_strike_last_time
+              when :spare then (shot[0] * 2 + shot[1])
+              when :strike
+                if spare_or_strike_the_time_before_last == :strike
                   (shot[0] * 3 + shot[1] * 2)
                 else
                   (shot[0] * 2 + shot[1] * 2)
                 end
-    else points += shot.sum
-    end
+              else shot.sum
+              end
 
     # スペアとストライクの状態を更新する
     spare_or_strike_the_time_before_last = spare_or_strike_last_time
@@ -52,7 +52,7 @@ frames.each.with_index(1) do |shot, index|
                                   :spare
                                 end
 
-  elsif index == 11 and spare_or_strike_last_time == :strike and spare_or_strike_the_time_before_last == :strike
+  elsif (index == 11) && (spare_or_strike_last_time == :strike) && (spare_or_strike_the_time_before_last == :strike)
     points += (shot[0] * 2 + shot[1])
 
   else
