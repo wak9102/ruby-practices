@@ -43,9 +43,9 @@ frames.each do |first, second|
   # 今回のフレームの得点を算出する
   case spare_or_strike_last_time
   when nil then points += (first + second)
-  when 'spare' then points += (first * 2 + second)
-  when 'strike'
-    points += if spare_or_strike_the_time_before_last == 'strike'
+  when :spare then points += (first * 2 + second)
+  when :strike
+    points += if spare_or_strike_the_time_before_last == :strike
                 (first * 3 + second * 2)
               else
                 (first * 2 + second * 2)
@@ -55,9 +55,9 @@ frames.each do |first, second|
   # スペアとストライクの状態を更新する
   spare_or_strike_the_time_before_last = spare_or_strike_last_time
   spare_or_strike_last_time = if first == 10
-                                'strike'
+                                :strike
                               elsif first + second == 10
-                                'spare'
+                                :spare
                               end
 end
 
