@@ -4,8 +4,23 @@
 require "optparse"
 
 # aオプションがない場合の処理
-def no_all(array)
-array.reject! { |f| /^\./ === f }
+def without_all(files)
+  files.reject! { |f| /^\./ === f }
+end
+
+# rオプションがある場合の処理
+def reverse(files)
+  files.reverse!
+end
+
+# lオプションがある場合の処理
+def puts_with_long(files)
+  puts files
+end
+
+# lオプションがない場合の処理
+def puts_without_long(files)
+  puts files
 end
 
 # コマンドラインオプションを配列で取得する
@@ -22,10 +37,17 @@ files = []
 Dir.foreach(dir_path){|f| files << f}
 
 # aオプションがなければドットファイルを削除する
-no_all(files) unless options.include?(:all)
+without_all(files) unless options.include?(:all)
 
 # rオプションがあれば降順にソートする
 files.sort!
-files.reverse! if options.include?(:reverse)
+reverse(files) if options.include?(:reverse)
 
-puts files
+# lオプションがあればロングフォーマットで出力する
+if options.include?(:long)
+  puts_with_long(files)
+else
+  puts_without_long(files)
+end
+
+
