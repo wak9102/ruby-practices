@@ -87,13 +87,13 @@ def puts_with_long_format(files)
     octal_file_mode = file_status.mode.to_s(8).rjust(6, '0')
     type = octal_file_mode_to_file_type_symbol(octal_file_mode)
     permission = octal_file_mode_to_file_permission_symbol(octal_file_mode)
-    blocks = file_status.blocks
+    link = file_status.nlink
     user = Etc.getpwuid(file_status.uid).name
     group = Etc.getgrgid(file_status.gid).name
     size = file_status.size
     date = "#{file_status.mtime.mon.to_s.rjust(2)} #{file_status.mtime.day.to_s.rjust(2)}"
     time = file_status.mtime.strftime('%R')
-    puts "#{type}#{permission}  #{blocks} #{user}  #{group}  #{size}  #{date} #{time} #{file}"
+    puts "#{type}#{permission}  #{link} #{user}  #{group}  #{size}  #{date} #{time} #{file}"
   end
 end
 
