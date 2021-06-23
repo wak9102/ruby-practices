@@ -5,6 +5,38 @@ require 'optparse'
 require 'pathname'
 require 'etc'
 
+MAX_OUTPUT_COLUMNS = 3 # 表示する最大行数は「３」で設定
+
+# 共通の処理をmainメソッドとして定義
+def main
+  # コマンドラインオプションを配列で取得する
+  options = []
+  opts = OptionParser.new
+  opts.on('-a', '--all') { options << :all }
+  opts.on('-l') { options << :long }
+  opts.on('-r', '--reverse') { options << :reverse }
+  opts.parse!(ARGV)
+
+  # カレントディレクトリにあるファイルの一覧を配列で取得する
+  dir_path = Dir.getwd
+  files = []
+  Dir.foreach(dir_path) { |file| files << file }
+
+  # aオプションがなければドットファイルを削除する
+  without_all(files) unless options.include?(:all)
+
+  # rオプションがあれば降順にソートする
+  files.sort!
+  reverse(files) if options.include?(:reverse)
+
+  # lオプションがあればロングフォーマットで出力する
+  if options.include?(:long)
+    puts_with_long(files)
+  else
+    puts_without_long(files)
+  end
+end
+
 # aオプションがない場合の処理
 def without_all(files)
   files.reject! { |file| /^\./.match?(file) }
@@ -78,30 +110,4 @@ def puts_without_long(files)
   end
 end
 
-# コマンドラインオプションを配列で取得する
-options = []
-opts = OptionParser.new
-opts.on('-a', '--all') { options << :all }
-opts.on('-l') { options << :long }
-opts.on('-r', '--reverse') { options << :reverse }
-opts.parse!(ARGV)
-
-# カレントディレクトリにあるファイルの一覧を配列で取得する
-dir_path = Dir.getwd
-files = []
-Dir.foreach(dir_path) { |file| files << file }
-
-# aオプションがなければドットファイルを削除する
-without_all(files) unless options.include?(:all)
-
-# rオプションがあれば降順にソートする
-files.sort!
-reverse(files) if options.include?(:reverse)
-
-# lオプションがあればロングフォーマットで出力する
-if options.include?(:long)
-  puts_with_long(files)
-else
-  MAX_OUTPUT_COLUMNS = 3 # 表示する最大行数は「３」で設定
-  puts_without_long(files)
-end
+main
