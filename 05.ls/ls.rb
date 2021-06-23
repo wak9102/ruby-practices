@@ -85,6 +85,7 @@ def puts_with_long_format(files)
   files.each do |file|
     file_status = File::Stat.new(file)
     octal_file_mode = file_status.mode.to_s(8).rjust(6, '0')
+
     type = octal_file_mode_to_file_type_symbol(octal_file_mode)
     permission = octal_file_mode_to_file_permission_symbol(octal_file_mode)
     link = file_status.nlink
@@ -101,6 +102,7 @@ end
 def puts_without_long_format(files)
   max_word_count = files.map(&:size).max # 表示するファイルの最大文字数を取得
   output_rows = files.size.fdiv(MAX_OUTPUT_COLUMNS).ceil # 表示する行数を取得
+
   output_rows.times do |row_count|
     MAX_OUTPUT_COLUMNS.times do |column_count|
       print '   ' unless column_count.zero?
