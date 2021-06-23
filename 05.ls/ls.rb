@@ -13,33 +13,33 @@ def main
   options = []
   opts = OptionParser.new
   opts.on('-a', '--all') { options << :all }
-  opts.on('-l') { options << :long }
+  opts.on('-l') { options << :long_format }
   opts.on('-r', '--reverse') { options << :reverse }
   opts.parse!(ARGV)
 
   # カレントディレクトリにあるファイルの一覧を配列で取得する
-  dir_path = Dir.getwd
-  files = []
-  Dir.foreach(dir_path) { |file| files << file }
+  files = Dir.glob('*')
 
-  # aオプションがなければドットファイルを削除する
-  without_all(files) unless options.include?(:all)
+  # aオプションがあればドットファイルも追加する
+  all(files) if options.include?(:all)
 
+  # ファイルを昇順ソートする
   # rオプションがあれば降順にソートする
   files.sort!
   reverse(files) if options.include?(:reverse)
 
+  # ファイル一覧を出力する
   # lオプションがあればロングフォーマットで出力する
-  if options.include?(:long)
-    puts_with_long(files)
+  if options.include?(:long_format)
+    puts_with_long_format(files)
   else
-    puts_without_long(files)
+    puts_without_long_format(files)
   end
 end
 
 # aオプションがない場合の処理
-def without_all(files)
-  files.reject! { |file| /^\./.match?(file) }
+def all(files)
+  files.concat(Dir.glob('.*'))
 end
 
 # rオプションがある場合の処理
@@ -78,7 +78,7 @@ def octal_file_mode_to_file_permission_symbol(octal_file_mode)
   TEXT
 end
 
-def puts_with_long(files)
+def puts_with_long_format(files)
   block_size = files.each.sum { |file| File.stat(file).blocks }
   puts "total #{block_size}"
 
@@ -98,7 +98,7 @@ def puts_with_long(files)
 end
 
 # lオプションがない場合の処理
-def puts_without_long(files)
+def puts_without_long_format(files)
   max_word_count = files.map(&:size).max # 表示するファイルの最大文字数を取得
   output_rows = files.size.fdiv(MAX_OUTPUT_COLUMNS).ceil # 表示する行数を取得
   output_rows.times do |row_count|
