@@ -7,7 +7,7 @@ require 'etc'
 
 # aオプションがない場合の処理
 def without_all(files)
-  files.reject! { |f| /^\./.match?(f) }
+  files.reject! { |file| /^\./.match?(file) }
 end
 
 # rオプションがある場合の処理
@@ -67,7 +67,15 @@ end
 
 # lオプションがない場合の処理
 def puts_without_long(files)
-  puts files
+  max_word_count = files.map(&:size).max # 表示するファイルの最大文字数を取得
+  output_rows = files.size.fdiv(MAX_OUTPUT_COLUMNS).ceil # 表示する行数を取得
+  output_rows.times do |row_count|
+    MAX_OUTPUT_COLUMNS.times do |column_count|
+      print '   ' unless column_count.zero?
+      print files[row_count + output_rows * column_count]&.ljust(max_word_count).to_s
+    end
+    puts "\n"
+  end
 end
 
 # コマンドラインオプションを配列で取得する
@@ -81,7 +89,7 @@ opts.parse!(ARGV)
 # カレントディレクトリにあるファイルの一覧を配列で取得する
 dir_path = Dir.getwd
 files = []
-Dir.foreach(dir_path) { |f| files << f }
+Dir.foreach(dir_path) { |file| files << file }
 
 # aオプションがなければドットファイルを削除する
 without_all(files) unless options.include?(:all)
@@ -94,5 +102,6 @@ reverse(files) if options.include?(:reverse)
 if options.include?(:long)
   puts_with_long(files)
 else
+  MAX_OUTPUT_COLUMNS = 3 # 表示する最大行数は「３」で設定
   puts_without_long(files)
 end
