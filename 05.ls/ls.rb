@@ -25,8 +25,11 @@ def main
 
   # ファイルを昇順ソートする
   # rオプションがあれば降順にソートする
-  files.sort!
-  reverse(files) if options.include?(:reverse)
+  if options.include?(:reverse)
+    files.sort!.reverse!
+  else
+    files.sort!
+  end
 
   # ファイル一覧を出力する
   # lオプションがあればロングフォーマットで出力する
@@ -40,11 +43,6 @@ end
 # aオプションがない場合の処理
 def all(files)
   files.concat(Dir.glob('.*'))
-end
-
-# rオプションがある場合の処理
-def reverse(files)
-  files.reverse!
 end
 
 # lオプションがある場合の処理
