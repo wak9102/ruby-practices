@@ -5,7 +5,7 @@ require 'optparse'
 require 'pathname'
 require 'etc'
 
-MAX_OUTPUT_COLUMNS = 3 # 表示する最大行数は「３」で設定
+MAX_OUTPUT_COLUMNS = 3 # lオプションがない場合の出力列数は「3」で設定
 
 # 共通の処理をmainメソッドとして定義
 def main
