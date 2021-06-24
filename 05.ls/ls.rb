@@ -18,18 +18,14 @@ def main
   opts.parse!(ARGV)
 
   # カレントディレクトリにあるファイルの一覧を配列で取得する
-  files = Dir.glob('*')
-
   # aオプションがあればドットファイルも追加する
-  all(files) if options.include?(:all)
+  files = Dir.glob('*')
+  files.concat(Dir.glob('.*')) if options.include?(:all)
 
   # ファイルを昇順ソートする
   # rオプションがあれば降順にソートする
-  if options.include?(:reverse)
-    files.sort!.reverse!
-  else
-    files.sort!
-  end
+  files.sort!
+  files.reverse! if options.include?(:reverse)
 
   # ファイル一覧を出力する
   # lオプションがあればロングフォーマットで出力する
@@ -40,12 +36,7 @@ def main
   end
 end
 
-# aオプションがない場合の処理
-def all(files)
-  files.concat(Dir.glob('.*'))
-end
-
-# lオプションがある場合の処理
+# lオプションがある場合の出力処理
 def octal_file_mode_to_file_type_symbol(octal_file_mode)
   {
     '01' => 'p',
@@ -96,9 +87,9 @@ def puts_with_long_format(files)
   end
 end
 
-# lオプションがない場合の処理
+# lオプションがない場合の出力処理
 def puts_without_long_format(files)
-  max_word_count = files.map(&:size).max # 表示するファイルの最大文字数を取得
+  max_word_count = files.map(&:size).max # 表示するファイル名のうち最長文字数を取得
   output_rows = files.size.fdiv(MAX_OUTPUT_COLUMNS).ceil # 表示する行数を取得
 
   output_rows.times do |row_count|
