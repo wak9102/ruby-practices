@@ -43,8 +43,8 @@ end
 # 要素ごとに結果を出力
 counted_results.each do |result|
   print result[:line].to_s.rjust(8)
-  print result[:word].to_s.rjust(8) unless options.include?(:line)
-  print result[:byte].to_s.rjust(8) unless options.include?(:line)
+  print result[:word].to_s.rjust(8) unless options.include?(:lines)
+  print result[:byte].to_s.rjust(8) unless options.include?(:lines)
   print " #{result[:name]}" unless result[:name] == :stdin
   print "\n"
 end
@@ -52,7 +52,7 @@ end
 # 引数が2つ以上ある場合はtotalも出力
 if arg_files.size >= 2
   print counted_results.inject(0) { |sum, result| sum + result[:line] }.to_s.rjust(8)
-  print counted_results.inject(0) { |sum, result| sum + result[:word] }.to_s.rjust(8) unless options.include?(:line)
-  print counted_results.inject(0) { |sum, result| sum + result[:byte] }.to_s.rjust(8) unless options.include?(:line)
+  print counted_results.inject(0) { |sum, result| sum + result[:word] }.to_s.rjust(8) unless options.include?(:lines)
+  print counted_results.inject(0) { |sum, result| sum + result[:byte] }.to_s.rjust(8) unless options.include?(:lines)
   print " total\n"
 end
