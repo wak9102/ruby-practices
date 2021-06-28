@@ -1,13 +1,14 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 
 # 文字列からline、word、byteをカウントするメソッド
 def wc_count(text)
   {
-    :line => text.count("\n"),
-    :word => text.scan(/\s+/).size,
-    :byte => text.bytesize
+    line: text.count("\n"),
+    word: text.scan(/\s+/).size,
+    byte: text.bytesize
   }
 end
 
@@ -23,16 +24,16 @@ arg_files = ARGV
 # 引数のファイルごとのカウント結果をhashに格納し配列に追加
 counted_results = []
 
-if  arg_files.size > 0
+if arg_files.size.positive?
   arg_files.each do |file|
-    counted_result = Hash.new
+    counted_result = {}
     counted_result[:name] = file
-    file_text = File.open(file, "r") { |f| f.read }
+    file_text = File.open(file, 'r', &:read)
     counted_result.merge!(wc_count(file_text))
     counted_results << counted_result
   end
 else # 引数がない場合は標準入力のカウント結果をhashに格納し配列に追加
-  counted_result = Hash.new
+  counted_result = {}
   counted_result[:name] = :stdin
   stdin_text = $stdin.readlines.join
   counted_result.merge!(wc_count(stdin_text))
@@ -55,4 +56,3 @@ if arg_files.size >= 2
   print counted_results.inject(0) { |sum, result| sum + result[:byte] }.to_s.rjust(8) unless options.include?(:line)
   print " total\n"
 end
-
