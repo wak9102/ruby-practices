@@ -37,21 +37,19 @@ def main
       print result[:word].to_s.rjust(8)
       print result[:byte].to_s.rjust(8)
     end
-    unless result[:name] == :stdin # 標準入力の結果にはファイル名を付与しない
-      print " #{result[:name]}"
-    end
+    print " #{result[:name]}" unless result[:name] == :stdin # 標準入力の結果にはファイル名を付与しない
     print "\n"
   end
 
   # 引数が2つ以上ある場合は合計値も出力
-  if arg_files.size >= 2
-    print counted_results.inject(0) { |sum, result| sum + result[:line] }.to_s.rjust(8)
-    unless options.include?(:lines)
-      print counted_results.inject(0) { |sum, result| sum + result[:word] }.to_s.rjust(8)
-      print counted_results.inject(0) { |sum, result| sum + result[:byte] }.to_s.rjust(8)
-    end
-    print " total\n"
+  return unless arg_files.size >= 2
+
+  print counted_results.inject(0) { |sum, result| sum + result[:line] }.to_s.rjust(8)
+  unless options.include?(:lines)
+    print counted_results.inject(0) { |sum, result| sum + result[:word] }.to_s.rjust(8)
+    print counted_results.inject(0) { |sum, result| sum + result[:byte] }.to_s.rjust(8)
   end
+  print " total\n"
 end
 
 # 文字列からline、word、byteをカウントするメソッド
