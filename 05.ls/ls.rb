@@ -68,7 +68,7 @@ def octal_file_mode_to_file_permission_symbol(octal_file_mode)
 end
 
 def puts_with_long_format(files)
-  block_size = files.each.sum { |file| File.stat(file).blocks }
+  block_size = files.sum { |file| File.stat(file).blocks }
   puts "total #{block_size}"
 
   files.each do |file|
