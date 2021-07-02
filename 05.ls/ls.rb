@@ -89,13 +89,17 @@ end
 
 # lオプションがない場合の出力処理
 def puts_without_long_format(files)
-  max_word_count = files.map(&:size).max # 表示するファイル名のうち最長文字数を取得
-  output_rows = files.size.fdiv(MAX_OUTPUT_COLUMNS).ceil # 表示する行数を取得
+  # 表示する行数を取得
+  output_rows = files.size.fdiv(MAX_OUTPUT_COLUMNS).ceil
+  # カラムごとのファイル名の最大文字数を配列で取得
+  max_word_counts = files.each_slice(output_rows).map do |files_sliced|
+    files_sliced.map(&:size).max
+  end
 
   output_rows.times do |row_count|
     MAX_OUTPUT_COLUMNS.times do |column_count|
       print '   ' unless column_count.zero?
-      print files[row_count + output_rows * column_count]&.ljust(max_word_count).to_s
+      print files[row_count + output_rows * column_count]&.ljust(max_word_counts[column_count]).to_s
     end
     puts "\n"
   end
