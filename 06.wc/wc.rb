@@ -38,7 +38,7 @@ end
 def wc_count_stdin
   counted_result = { name: :stdin }
   stdin_text = $stdin.readlines.join
-  counted_result.merge!(text_to_wc_count(stdin_text))
+  counted_result.merge!(wc_count_text(stdin_text))
 end
 
 def counted_results_print(counted_results, options)
