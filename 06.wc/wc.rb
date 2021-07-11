@@ -32,13 +32,13 @@ end
 def wc_count_file(file)
   counted_result = { name: file }
   file_text = File.open(file, 'r', &:read)
-  counted_result.merge!(wc_count_text(file_text))
+  counted_result.merge(wc_count_text(file_text))
 end
 
 def wc_count_stdin
   counted_result = { name: :stdin }
   stdin_text = $stdin.readlines.join
-  counted_result.merge!(wc_count_text(stdin_text))
+  counted_result.merge(wc_count_text(stdin_text))
 end
 
 def counted_results_print(counted_results, options)
@@ -52,9 +52,9 @@ def counted_results_print(counted_results, options)
 end
 
 def counted_results_total_print(counted_results, options)
-  print counted_results.inject(0) { |sum, result| sum + result[:line] }.to_s.rjust(8)
-  print counted_results.inject(0) { |sum, result| sum + result[:word] }.to_s.rjust(8) if options.none?(:lines)
-  print counted_results.inject(0) { |sum, result| sum + result[:byte] }.to_s.rjust(8) if options.none?(:lines)
+  print counted_results.sum { |result| result[:line] }.to_s.rjust(8)
+  print counted_results.sum { |result| result[:word] }.to_s.rjust(8) if options.none?(:lines)
+  print counted_results.sum { |result| result[:byte] }.to_s.rjust(8) if options.none?(:lines)
   print " total\n"
 end
 
