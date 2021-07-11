@@ -12,10 +12,12 @@ def main
 
   # コマンドライン引数ごとのワードカウント結果を配列に格納
   # コマンドライン引数がない場合は標準入力を参照して結果を格納
-  counted_results = ARGV.map { |file| wc_count_file(file) }
-  counted_results << wc_count_stdin if ARGV.none?
+  counted_results = if ARGV.any?
+                      ARGV.map { |file| wc_count_file(file) }
+                    else
+                      Array.new([wc_count_stdin])
+                    end
 
-  # 結果を一つずつ出力
   # 引数が2つ以上ある場合は合計値も出力
   counted_results_print(counted_results, options)
   counted_results_total_print(counted_results, options) if ARGV.size >= 2
